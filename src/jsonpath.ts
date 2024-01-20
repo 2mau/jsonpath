@@ -25,15 +25,15 @@ export class JSONPath {
     assert.ok(string, "we need a path");
     assert.equal(typeof fn, "function", "fn needs to be function")
 
-    var nodes = this.nodes(obj, string).sort(function(a, b) {
+    var nodes = this.nodes(obj, string).sort(function (a, b) {
       // sort nodes so we apply from the bottom up
       return b.path.length - a.path.length;
     });
 
-    nodes.forEach(function(node) {
-      var key = node.path.pop();
-      var parent = this.value(obj, this.stringify(node.path));
-      var val = node.value = fn.call(obj, parent[key]);
+    nodes.forEach(function (node) {
+      var key = node.path[node.path.length - 1];
+      var parent = this.value(obj, this.stringify(node.path.slice(0, -1)));
+      var val = (node.value = fn.call(obj, parent[key]));
       parent[key] = val;
     }, this);
 
